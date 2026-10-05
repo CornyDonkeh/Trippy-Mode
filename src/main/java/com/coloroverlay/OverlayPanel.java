@@ -112,7 +112,7 @@ final class OverlayPanel extends PluginPanel
             updateColor(tint, config.color());
             palettes.removeAllItems();
             for (PalettePreset preset : PalettePreset.values()) { palettes.addItem(preset); }
-            List<PaletteLibrary.Entry> saved = PaletteLibrary.read(config.savedPalettes());
+            List<PaletteLibrary.Entry> saved = controls.saved();
             Object selected = config.palette();
             for (PaletteLibrary.Entry entry : saved) {
                 palettes.addItem(entry);

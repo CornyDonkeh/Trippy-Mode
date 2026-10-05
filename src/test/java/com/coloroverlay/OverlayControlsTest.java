@@ -26,7 +26,7 @@ public class OverlayControlsTest
         ConfigManager manager = mock(ConfigManager.class);
         doAnswer(i -> { data.put(i.getArgument(1), i.getArgument(2)); return null; })
             .when(manager).setConfiguration(eq("coloroverlay"), anyString(), any(Object.class));
-        OverlayControls controls = new OverlayControls(manager, config);
+        OverlayControls controls = new OverlayControls(manager, config, new com.google.gson.Gson());
         assertArrayEquals(new Color[]{Color.RED, Color.BLUE, Color.GREEN}, controls.colors());
         controls.editColor(1, Color.WHITE);
         assertArrayEquals(new Color[]{Color.RED, Color.WHITE, Color.GREEN}, controls.colors());
@@ -34,21 +34,21 @@ public class OverlayControlsTest
         controls.count(4); assertEquals(new Color(0x123456), controls.colors()[3]);
         controls.count(3); controls.save("My ocean");
         assertEquals("My ocean", config.savedPaletteName());
-        assertEquals(1, PaletteLibrary.read(config.savedPalettes()).size());
+        assertEquals(1, controls.saved().size());
         controls.selectPreset(PalettePreset.SUNSET); controls.editColor(0, Color.BLACK);
         assertEquals(PalettePreset.CUSTOM, config.palette());
         assertEquals(Color.BLACK, controls.colors()[0]);
-        controls.selectSaved(PaletteLibrary.read(config.savedPalettes()).get(0));
+        controls.selectSaved(controls.saved().get(0));
         assertArrayEquals(new Color[]{Color.RED, Color.WHITE, Color.GREEN}, controls.colors());
         EffectPalette rendered = EffectPalette.create(config.palette(), config.customColors(), config.colorCount());
         assertEquals(Color.WHITE, rendered.sample(1.0 / 3));
         controls.editColor(2, Color.YELLOW); controls.save("my OCEAN");
-        assertEquals(1, PaletteLibrary.read(config.savedPalettes()).size());
-        assertEquals(Color.YELLOW, PaletteLibrary.read(config.savedPalettes()).isEmpty() ? null : controls.colors()[2]);
+        assertEquals(1, controls.saved().size());
+        assertEquals(Color.YELLOW, controls.saved().isEmpty() ? null : controls.colors()[2]);
         controls.delete("my OCEAN");
-        assertTrue(PaletteLibrary.read(config.savedPalettes()).isEmpty());
+        assertTrue(controls.saved().isEmpty());
         assertEquals("", config.savedPaletteName());
         assertEquals(Color.YELLOW, controls.colors()[2]);
-        assertTrue(PaletteLibrary.read("bad json").isEmpty());
+        assertTrue(PaletteLibrary.read("bad json", new com.google.gson.Gson()).isEmpty());
     }
 }

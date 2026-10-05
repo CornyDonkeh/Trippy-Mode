@@ -21,7 +21,7 @@ public class OverlayPanelTest
         };
         SwingUtilities.invokeAndWait(() -> {
             OverlayPanel panel = new OverlayPanel(mock(Client.class), mock(ColorPickerManager.class), config,
-                new OverlayControls(mock(ConfigManager.class), config));
+                new OverlayControls(mock(ConfigManager.class), config, new com.google.gson.Gson()));
             assertEquals(3, swatches(panel));
             count[0] = 16; panel.refresh(); assertEquals(16, swatches(panel));
             count[0] = 1; panel.refresh(); assertEquals(1, swatches(panel));

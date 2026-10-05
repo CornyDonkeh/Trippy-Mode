@@ -15,12 +15,12 @@ final class PaletteLibrary
         @Override public String toString() { return name; }
     }
 
-    static List<Entry> read(String json)
+    static List<Entry> read(String json, Gson gson)
     {
         List<Entry> entries = new ArrayList<>();
         try
         {
-            Entry[] parsed = new Gson().fromJson(json, Entry[].class);
+            Entry[] parsed = gson.fromJson(json, Entry[].class);
             if (parsed != null) {
                 for (Entry entry : parsed) {
                     if (entry != null && entry.name != null && !entry.name.trim().isEmpty()
@@ -35,5 +35,5 @@ final class PaletteLibrary
         return entries;
     }
 
-    static String write(List<Entry> entries) { return new Gson().toJson(entries); }
+    static String write(List<Entry> entries, Gson gson) { return gson.toJson(entries); }
 }

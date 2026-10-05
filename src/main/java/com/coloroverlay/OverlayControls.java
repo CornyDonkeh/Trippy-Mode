@@ -1,5 +1,7 @@
 package com.coloroverlay;
 
+import com.google.gson.Gson;
+
 import java.awt.Color;
 import java.util.List;
 import net.runelite.client.config.ConfigManager;
@@ -8,7 +10,11 @@ final class OverlayControls
 {
     private final ConfigManager manager;
     private final ColorOverlayConfig config;
-    OverlayControls(ConfigManager manager, ColorOverlayConfig config) { this.manager = manager; this.config = config; }
+    private final Gson gson;
+    OverlayControls(ConfigManager manager, ColorOverlayConfig config, Gson gson) {
+        this.manager = manager; this.config = config; this.gson = gson;
+    }
+    List<PaletteLibrary.Entry> saved() { return PaletteLibrary.read(config.savedPalettes(), gson); }
     void set(String key, Object value) { manager.setConfiguration("coloroverlay", key, value); }
 
     Color[] colors()
@@ -54,18 +60,18 @@ final class OverlayControls
         name = name.trim();
         if (name.isEmpty() || name.length() > 40) { throw new IllegalArgumentException("Use a palette name with 1–40 characters."); }
         final String selectedName = name;
-        List<PaletteLibrary.Entry> entries = PaletteLibrary.read(config.savedPalettes());
+        List<PaletteLibrary.Entry> entries = saved();
         entries.removeIf(entry -> entry.name.equalsIgnoreCase(selectedName));
         Color[] colors = colors();
         PaletteLibrary.Entry entry = new PaletteLibrary.Entry(name, encode(colors), colors.length);
-        entries.add(entry); set("savedPalettes", PaletteLibrary.write(entries)); selectSaved(entry);
+        entries.add(entry); set("savedPalettes", PaletteLibrary.write(entries, gson)); selectSaved(entry);
     }
 
     void delete(String name)
     {
-        List<PaletteLibrary.Entry> entries = PaletteLibrary.read(config.savedPalettes());
+        List<PaletteLibrary.Entry> entries = saved();
         entries.removeIf(entry -> entry.name.equals(name));
-        set("savedPalettes", PaletteLibrary.write(entries)); set("savedPaletteName", "");
+        set("savedPalettes", PaletteLibrary.write(entries, gson)); set("savedPaletteName", "");
     }
 
     private static String encode(Color[] colors)

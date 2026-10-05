@@ -1,6 +1,7 @@
 package com.coloroverlay;
 
 import com.google.inject.Provides;
+import com.google.gson.Gson;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
 import java.awt.Color;
@@ -24,6 +25,7 @@ public class ColorOverlayPlugin extends Plugin
     @Inject private WorldTintOverlay overlay;
     @Inject private ConfigManager manager;
     @Inject private ColorOverlayConfig config;
+    @Inject private Gson gson;
     @Inject private Client client;
     @Inject private ClientToolbar toolbar;
     @Inject private ColorPickerManager picker;
@@ -42,7 +44,7 @@ public class ColorOverlayPlugin extends Plugin
         overlay.resetAnimation(); overlayManager.add(overlay);
         SwingUtilities.invokeLater(() -> {
             if (!running) { return; }
-            panel = new OverlayPanel(client, picker, config, new OverlayControls(manager, config));
+            panel = new OverlayPanel(client, picker, config, new OverlayControls(manager, config, gson));
             BufferedImage icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = icon.createGraphics();
             try {
