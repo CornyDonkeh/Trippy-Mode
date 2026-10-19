@@ -31,7 +31,7 @@ final class PaletteLibrary
                 }
             }
         }
-        catch (RuntimeException ignored) { /* Keep malformed storage from breaking the plugin. */ }
+        catch (RuntimeException ignored) { /* Ignore invalid saved palettes. */ }
         return entries;
     }
 

@@ -134,7 +134,7 @@ final class OverlayPanel extends PluginPanel
                     int size = config.colorCount();
                     RuneliteColorPicker dialog = picker.create(client, colors[index], "Palette color " + (index + 1), false);
                     dialog.setOnClose(color -> {
-                        // A picker opened for an old palette should not modify a newly selected palette.
+                        // Discard edits if the palette changed while the picker was open.
                         if (active && preset == config.palette() && size == config.colorCount()
                             && Objects.equals(original, config.customColors())) {
                             controls.editColor(index, color); refresh();

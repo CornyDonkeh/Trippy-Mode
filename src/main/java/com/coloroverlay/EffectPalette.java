@@ -23,14 +23,14 @@ final class EffectPalette
                 if (parsed.size() == 16) { break; }
             }
         }
-        // Empty or malformed custom lists fall back to a known palette, without interrupting rendering.
+        // Use Rainbow if no valid colors were saved.
         if (parsed.isEmpty()) { return create(PalettePreset.RAINBOW, "", count); }
         Color[] anchors = parsed.toArray(new Color[0]);
         int size = Math.max(1, Math.min(16, count));
         Color[] selected = new Color[size];
         for (int i = 0; i < size; i++)
         {
-            // Preserve the first/last anchors when changing the requested palette size.
+            // Resample presets; keep custom slots unchanged.
             selected[i] = preset == PalettePreset.CUSTOM ? anchors[Math.min(i, anchors.length - 1)]
                 : sampleLine(anchors, size == 1 ? 0 : i * (anchors.length - 1.0) / (size - 1));
         }

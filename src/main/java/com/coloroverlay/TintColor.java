@@ -36,7 +36,7 @@ final class TintColor
                     break;
                 case COLOR_SWIRL:
                     double radius = Math.hypot(x, y);
-                    // Fade the angular term at the center to avoid a sharp seam or singularity.
+                    // Soften the pattern at the center.
                     hue += radius * 1.5 + 0.35 * Math.min(1, radius * 3)
                         * Math.sin(3 * Math.atan2(y, x) + radius * 8 - phase * Math.PI * 2);
                     break;
@@ -68,7 +68,6 @@ final class TintColor
                         + 0.25 * Math.min(1, tunnelRadius * 5) * Math.cos(sectors * Math.atan2(y, x) - phase * Math.PI * 2);
                     break;
                 case RAINBOW_RINGS:
-                    // Increasing radial hue moves each rainbow band outward over time.
                     hue = Math.hypot(x, y) * 3 - phase;
                     break;
                 case PLASMA:
@@ -79,7 +78,6 @@ final class TintColor
                 case AURORA:
                     double curtain = y * 3 + 0.35 * Math.sin(x * 8 + phase * Math.PI * 2)
                         + 0.15 * Math.sin(x * 17 - phase * Math.PI * 2);
-                    // Green, cyan and violet ribbons at constant opacity.
                     hue = 0.5 + 0.22 * Math.sin(curtain * Math.PI * 2 + phase * Math.PI * 2);
                     break;
                 default:

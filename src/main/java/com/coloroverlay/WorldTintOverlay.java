@@ -29,7 +29,7 @@ public class WorldTintOverlay extends Overlay
         this.client = client;
         this.config = config;
         setPosition(OverlayPosition.DYNAMIC);
-        // Scene first, tint second, overhead text and all game widgets afterward.
+        // Leave widgets and overhead text untinted.
         setLayer(OverlayLayer.ABOVE_SCENE);
         resetAnimation();
     }
@@ -66,7 +66,7 @@ public class WorldTintOverlay extends Overlay
             int points = config.points(), layers = config.layers();
             if (config.trippyMode() && style.isSpatial())
             {
-                // A small reusable color field keeps animation cheap even on large displays.
+                // Render at low resolution, then scale to the viewport.
                 int imageWidth = Math.min(160, width);
                 int imageHeight = Math.max(1, Math.min(160, (int) Math.round(imageWidth * (double) height / width)));
                 if (effectImage == null || effectImage.getWidth() != imageWidth || effectImage.getHeight() != imageHeight)
@@ -96,7 +96,7 @@ public class WorldTintOverlay extends Overlay
             }
         }
         finally { tint.dispose(); }
-        // No bounds to drag, click, or add a menu entry to.
+        // No interactive overlay bounds.
         return null;
     }
 }
